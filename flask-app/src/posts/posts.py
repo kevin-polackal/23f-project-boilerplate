@@ -3,16 +3,16 @@ import json
 from src import db
 
 
-projects = Blueprint('projects', __name__)
+posts = Blueprint('posts', __name__)
 
-# Get all the projects from the database with their title and description
-@projects.route('/projects', methods=['GET'])
-def get_projects():
+# Get all the posts from the database with their title and content
+@posts.route('/posts', methods=['GET'])
+def get_posts():
     # get a cursor object from the database
     cursor = db.get_db().cursor()
 
     # use cursor to query the database for a list of products
-    cursor.execute('SELECT projectID, title, overview as description, funding FROM Project')
+    cursor.execute('SELECT userName, title, content FROM Post JOIN User LIMIT 50')
 
     # grab the column headers from the returned data
     column_headers = [x[0] for x in cursor.description]
@@ -30,24 +30,46 @@ def get_projects():
         json_data.append(dict(zip(column_headers, row)))
 
     return jsonify(json_data)
-
-@projects.route('/projects', methods=['POST'])
-def add_new_project():
+@posts.route('/posts/<userID>', methods=['POST'])
+def new_post(userID):
     
     # collecting data from the request object 
     the_data = request.json
     current_app.logger.info(the_data)
 
     #extracting the variable
-    description = the_data['overview']
     title = the_data['title']
-    funding = the_data['funding']
+    content = the_data['content']
 
     # Constructing the query
-    query = 'INSERT INTO Project (overview, title, funding) VALUES ("'
-    query += description + '", "'
-    query += title + '", '
-    query += str(funding) + ')'
+    query = 'INSERT INTO Post (userID, title, content) VALUES ("'
+    query += str(userID) + '", "'
+    query += title.replace('"', '\\"') + '", "'
+    query += content.replace('"', '\\"') + '")'
+    current_app.logger.info(query)
+
+
+
+    # executing and committing the insert statement 
+    cursor = db.get_db().cursor()
+    cursor.execute(query)
+    db.get_db().commit()
+    
+    return 'Success!'
+
+@posts.route('/posts/<userID>/<postID>', methods=['PUT'])
+def update_proj(userID, postID):
+    
+    # collecting data from the request object 
+    the_data = request.json
+    current_app.logger.info(the_data)
+
+    #extracting the variable
+    content = the_data['content']
+    title = the_data['title']
+
+    # Constructing the query
+    query = "UPDATE Post SET content = '{}', title = '{}' WHERE userID = {} AND postID = {}".format(content.replace("'", "''"), title.replace("'", "''"), userID, postID)
     current_app.logger.info(query)
 
 
@@ -58,48 +80,34 @@ def add_new_project():
     
     return 'Success!'
 
-@projects.route('/projects/<projectID>', methods=['PUT'])
-def update_proj(projectID):
-    
-    # collecting data from the request object 
-    the_data = request.json
-    current_app.logger.info(the_data)
 
-    #extracting the variable
-    description = the_data['overview']
-    title = the_data['title']
-    funding = the_data['funding']
-
-    # Constructing the query
-    query = "UPDATE Project SET overview = '{}', title = '{}', funding = {} WHERE projectID = {}".format(description.replace("'", "''"), title.replace("'", "''"), funding, projectID)
-    current_app.logger.info(query)
-
-
-    # executing and committing the insert statement 
-    cursor = db.get_db().cursor()
-    cursor.execute(query)
-    db.get_db().commit()
-    
-    return 'Success!'
-
-
-@projects.route('/projects/<projectID>', methods=['DELETE'])
-def delete_proj(projectID):
+@posts.route('/posts/<userID>/<postID>', methods=['DELETE'])
+def delete_post(postID, userID):
     
     # executing and committing the deletion statement 
     cursor = db.get_db().cursor()
-    cursor.execute('DELETE FROM Project WHERE projectID = {0}'.format(projectID))
+    cursor.execute('DELETE FROM Post WHERE postID = {} AND userID = {}'.format(postID, userID))
     db.get_db().commit()
     
     return 'Success!'
 
-@projects.route('/projects/<projectID>/milestones', methods=['GET'])
-def get_milestones(projectID):
+@posts.route('/posts/<userID>/', methods=['DELETE'])
+def delete_all_user_posts(userID):
+    
+    # executing and committing the deletion statement 
+    cursor = db.get_db().cursor()
+    cursor.execute('DELETE FROM Post WHERE userID = {}'.format(userID))
+    db.get_db().commit()
+    
+    return 'Success!'
+
+@posts.route('/posts/<postID>/comments', methods=['GET'])
+def get_milestones(postID):
     # get a cursor object from the database
     cursor = db.get_db().cursor()
 
     # use cursor to query the database for a list of products
-    cursor.execute('SELECT projectID, dueDate, completed FROM Milestone WHERE Milestone.projectID = {0}'.format(projectID))
+    cursor.execute('SELECT username, content FROM Comment JOIN User on Comment.userID = User.userID WHERE Comment.postID = {}'.format(postID))
 
     # grab the column headers from the returned data
     column_headers = [x[0] for x in cursor.description]
@@ -116,13 +124,13 @@ def get_milestones(projectID):
     for row in theData:
         json_data.append(dict(zip(column_headers, row)))
 
-    return jsonify(json_data)
+    return jsonify(json_data) 
 
 # Get specific information regarding a project
-@projects.route('/projects/<projectID>', methods=['GET'])
-def get_project(projectID):
+@posts.route('/posts/<userID>', methods=['GET'])
+def get_project(userID):
     cursor = db.get_db().cursor()
-    cursor.execute('SELECT title, overview, funding FROM Project WHERE projectID = {0}'.format(projectID))
+    cursor.execute('SELECT title, content FROM Post WHERE userID = {0}'.format(userID))
     column_headers = [x[0] for x in cursor.description]
     json_data = []
     theData = cursor.fetchall()
