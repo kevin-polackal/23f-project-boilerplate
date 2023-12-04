@@ -142,16 +142,3 @@ def get_user_roles(userID):
         json_data.append(dict(zip(column_headers, row)))
 
     return jsonify(json_data)
-'''
-# Get specific information regarding a project
-@projects.route('/projects/<projectID>', methods=['GET'])
-def get_project(projectID):
-    cursor = db.get_db().cursor()
-    cursor.execute('SELECT title, overview, funding FROM Project WHERE projectID = {0}'.format(projectID))
-    column_headers = [x[0] for x in cursor.description]
-    json_data = []
-    theData = cursor.fetchall()
-    for row in theData:
-        json_data.append(dict(zip(column_headers, row)))
-    return jsonify(json_data)
-'''
