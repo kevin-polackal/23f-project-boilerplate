@@ -5,6 +5,12 @@ from src import db
 
 projects = Blueprint('projects', __name__)
 
+# VARIABLES:
+    # -> Overview
+    # -> Title
+    # -> Funding
+    # -> (primary key) ID
+
 # GET all the projects from the database with their title and description
 @projects.route('/projects', methods=['GET'])
 def get_projects():
@@ -39,9 +45,6 @@ def add_new_project():
     current_app.logger.info(the_data)
 
     #extracting the variables of a project:
-    # -> Overview
-    # -> Title
-    # -> Funding
     description = the_data['overview']
     title = the_data['title']
     funding = the_data['funding']

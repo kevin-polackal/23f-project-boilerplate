@@ -5,13 +5,20 @@ from src import db
 
 posts = Blueprint('posts', __name__)
 
+# Post Variables:
+    # -> userName
+    # -> title
+    # -> content
+    # -> primary key (postID)
+
+
 # Get all the posts from the database with their title and content
 @posts.route('/posts', methods=['GET'])
 def get_posts():
     # get a cursor object from the database
     cursor = db.get_db().cursor()
 
-    # use cursor to query the database for a list of products
+    # use cursor to query the database for a list of posts
     cursor.execute('SELECT userName, title, content FROM Post JOIN User LIMIT 50')
 
     # grab the column headers from the returned data
@@ -30,6 +37,8 @@ def get_posts():
         json_data.append(dict(zip(column_headers, row)))
 
     return jsonify(json_data)
+
+# CREATE a post for this user
 @posts.route('/posts/<userID>', methods=['POST'])
 def new_post(userID):
     
@@ -57,8 +66,9 @@ def new_post(userID):
     
     return 'Success!'
 
+# UPDATE a post for a given user
 @posts.route('/posts/<userID>/<postID>', methods=['PUT'])
-def update_proj(userID, postID):
+def update_user_post(userID, postID):
     
     # collecting data from the request object 
     the_data = request.json
@@ -80,7 +90,7 @@ def update_proj(userID, postID):
     
     return 'Success!'
 
-
+# DELETE a post for a given user
 @posts.route('/posts/<userID>/<postID>', methods=['DELETE'])
 def delete_post(postID, userID):
     
@@ -91,6 +101,7 @@ def delete_post(postID, userID):
     
     return 'Success!'
 
+# DELETE all posts for a user based on their userID
 @posts.route('/posts/<userID>/', methods=['DELETE'])
 def delete_all_user_posts(userID):
     
@@ -101,12 +112,13 @@ def delete_all_user_posts(userID):
     
     return 'Success!'
 
+# GET the comments for a given post based on its postID
 @posts.route('/posts/<postID>/comments', methods=['GET'])
-def get_milestones(postID):
+def get_post_comments(postID):
     # get a cursor object from the database
     cursor = db.get_db().cursor()
 
-    # use cursor to query the database for a list of products
+    # use cursor to query the database for a list of posts
     cursor.execute('SELECT username, content FROM Comment JOIN User on Comment.userID = User.userID WHERE Comment.postID = {}'.format(postID))
 
     # grab the column headers from the returned data
@@ -126,9 +138,9 @@ def get_milestones(postID):
 
     return jsonify(json_data) 
 
-# Get specific information regarding a project
+# GET all posts from a given user based on their ID
 @posts.route('/posts/<userID>', methods=['GET'])
-def get_project(userID):
+def get_all_user_posts(userID):
     cursor = db.get_db().cursor()
     cursor.execute('SELECT title, content FROM Post WHERE userID = {0}'.format(userID))
     column_headers = [x[0] for x in cursor.description]
