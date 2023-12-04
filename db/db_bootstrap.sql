@@ -3150,9 +3150,9 @@ INSERT INTO Role (projectID, userID, role) VALUES (51413, 9633992, 'quis orci eg
 INSERT INTO Role (projectID, userID, role) VALUES (94178, 6023303, 'sit amet sapien dignissim vestibulum');
 
 -- Tag
-INSERT INTO Tag (tagID, content) VALUES (1, 'pulvinar');
-INSERT INTO Tag (tagID, content) VALUES (2, 'dapibus');
-INSERT INTO Tag (tagID, content) VALUES (3, 'justo');
+INSERT INTO Tag (tagID, content) VALUES (1, 'Computer Science');
+INSERT INTO Tag (tagID, content) VALUES (2, 'Philosophy');
+INSERT INTO Tag (tagID, content) VALUES (3, 'Law');
 INSERT INTO Tag (tagID, content) VALUES (4, 'in');
 INSERT INTO Tag (tagID, content) VALUES (5, 'id');
 INSERT INTO Tag (tagID, content) VALUES (6, 'ac');

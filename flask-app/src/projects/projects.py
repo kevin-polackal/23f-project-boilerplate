@@ -36,6 +36,7 @@ def get_projects():
 
     return jsonify(json_data)
 
+
 # Create or POST a new project
 @projects.route('/projects', methods=['POST'])
 def add_new_project():
@@ -65,7 +66,37 @@ def add_new_project():
     
     return 'Success!'
 
+
+@projects.route('/projects/join', methods=['POST'])
+def join_project():
+    
+    # collecting data from the request object 
+    the_data = request.json
+    current_app.logger.info(the_data)
+
+    #extracting the variable
+    projectID = the_data['projectID']
+    userID = the_data['userID']
+    role = the_data['role']
+
+    # Constructing the query
+    query = 'INSERT INTO Role (projectID, userID, role) VALUES ("'
+    query += str(projectID) + '", "'
+    query += str(userID) + '", "'
+    query += role + '")'
+    current_app.logger.info(query)
+
+
+    # executing and committing the insert statement 
+    cursor = db.get_db().cursor()
+    cursor.execute(query)
+    db.get_db().commit()
+    
+    return 'Success!'
+
+
 # UPDATE/PUT a project based on its ID
+
 @projects.route('/projects/<projectID>', methods=['PUT'])
 def update_proj(projectID):
     
