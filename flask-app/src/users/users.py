@@ -5,13 +5,19 @@ from src import db
 
 users = Blueprint('users', __name__)
 
-# Get all the projects from the database with their title and description
+# VARIABLES:
+    # -> age
+    # -> isAdmin
+    # -> userName
+    # -> (primary key) userID
+
+# Get all the users from the database with their variables.
 @users.route('/users', methods=['GET'])
 def get_users():
     # get a cursor object from the database
     cursor = db.get_db().cursor()
 
-    # use cursor to query the database for a list of products
+    # use cursor to query the database for a list of users
     cursor.execute('SELECT userID, userName, isAdmin, age FROM User')
 
     # grab the column headers from the returned data
@@ -31,12 +37,14 @@ def get_users():
 
     return jsonify(json_data)
 
+# GET a specific user based on their userID
 @users.route('/users/<userID>', methods=['GET'])
 def get_a_user(userID):
     # get a cursor object from the database
     cursor = db.get_db().cursor()
 
-    # use cursor to query the database for a list of products
+    # use cursor to query the database for a list of users
+    # Cursor executes sql command by dynamically passing userID from request to get_a_user
     cursor.execute('SELECT userID, userName, isAdmin, age FROM User WHERE userID = {}'.format(userID))
 
     # grab the column headers from the returned data
@@ -56,6 +64,7 @@ def get_a_user(userID):
 
     return jsonify(json_data)
 
+# CREATE a user
 @users.route('/users', methods=['POST'])
 def add_new_user():
     
@@ -83,6 +92,7 @@ def add_new_user():
     
     return 'Success!'
 
+# Update a user based on their ID
 @users.route('/users/<userID>', methods=['PUT'])
 def update_user(userID):
     
@@ -96,6 +106,9 @@ def update_user(userID):
     age = the_data['age']
 
     # Constructing the query
+    # username.replace("'", "''") is used to escape any single quotes within the username variable by 
+    # replacing them with double single quotes. This is done to prevent SQL injection
+    #  by ensuring that any single quotes in the username are treated as data, not as part of the SQL query.
     query = "UPDATE User SET userName = '{}', isAdmin = '{}', age = {} WHERE userID = {}".format(username.replace("'", "''"), admin, age, userID)
     current_app.logger.info(query)
 
@@ -107,7 +120,7 @@ def update_user(userID):
     
     return 'Success!'
 
-
+# DELETE a user based on their ID
 @users.route('/users/<userID>', methods=['DELETE'])
 def delete_user(userID):
     
@@ -118,6 +131,7 @@ def delete_user(userID):
     
     return 'Success!'
 
+# GET the roles for a user based on their ID
 @users.route('/users/<userID>/roles', methods=['GET'])
 def get_user_roles(userID):
     # get a cursor object from the database
