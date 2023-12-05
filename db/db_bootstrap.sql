@@ -37,9 +37,9 @@ CREATE TABLE IF NOT EXISTS Message
     content MEDIUMTEXT,
     PRIMARY KEY(messageID),
     FOREIGN KEY (senderID) REFERENCES User(userID)
-    ON UPDATE CASCADE ON DELETE CASCADE,,
+    ON UPDATE CASCADE ON DELETE CASCADE,
     FOREIGN KEY (receiverID) REFERENCES User(userID)
-    ON UPDATE CASCADE ON DELETE CASCADE,,
+    ON UPDATE CASCADE ON DELETE CASCADE,
     INDEX (senderID, receiverID)
 );
 
@@ -53,7 +53,7 @@ CREATE TABLE IF NOT EXISTS Report
     FOREIGN KEY (reporterID) REFERENCES User(userID)
     ON UPDATE CASCADE ON DELETE CASCADE,
     FOREIGN KEY (offenderID) REFERENCES User(userID)
-    ON UPDATE CASCADE ON DELETE CASCADE,,
+    ON UPDATE CASCADE ON DELETE CASCADE,
     INDEX (reporterID, offenderID)
 );
 
@@ -5909,7 +5909,7 @@ INSERT INTO Milestone (userID, projectID, milestoneID, dueDate) VALUES (5289593,
 INSERT INTO Milestone (userID, projectID, milestoneID, dueDate) VALUES (5123824, 74120, 749, '2024-06-28');
 INSERT INTO Milestone (userID, projectID, milestoneID, dueDate) VALUES (1591625, 97473, 750, '2024-04-24');
 INSERT INTO Milestone (userID, projectID, milestoneID, dueDate) VALUES (9927484, 42268, 751, '2024-02-23');
-INSERT INTO Milestone (userID, projectID, milestoneID, dueDate) VALUES (1591625, 42268, 1500, '2024-04-23')
+INSERT INTO Milestone (userID, projectID, milestoneID, dueDate) VALUES (1591625, 42268, 1500, '2024-04-23');
 INSERT INTO Milestone (userID, projectID, milestoneID, dueDate) VALUES (1459298, 60172, 752, '2024-05-18');
 INSERT INTO Milestone (userID, projectID, milestoneID, dueDate) VALUES (2222922, 20421, 753, '2024-02-19');
 INSERT INTO Milestone (userID, projectID, milestoneID, dueDate) VALUES (2888289, 69914, 754, '2024-01-31');
