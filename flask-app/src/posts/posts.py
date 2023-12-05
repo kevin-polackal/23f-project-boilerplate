@@ -18,8 +18,14 @@ def get_posts():
     # get a cursor object from the database
     cursor = db.get_db().cursor()
 
-    # use cursor to query the database for a list of posts
-    cursor.execute('SELECT User.userName, Post.title, Post.content FROM Post JOIN User ON Post.userID = User.userID LIMIT 50')
+    # use cursor to query the database for a list of posts    
+    cursor.execute('''
+    SELECT User.userName, User.age, Post.title, Post.content, Post.createdAt 
+    FROM Post 
+    JOIN User ON Post.userID = User.userID 
+    ORDER BY Post.createdAt DESC
+    LIMIT 100
+''')
 
     # grab the column headers from the returned data
     column_headers = [x[0] for x in cursor.description]
@@ -142,7 +148,7 @@ def get_post_comments(postID):
 @posts.route('/posts/<userID>', methods=['GET'])
 def get_all_user_posts(userID):
     cursor = db.get_db().cursor()
-    cursor.execute('SELECT title, content FROM Post WHERE userID = {0}'.format(userID))
+    cursor.execute('SELECT postID, title, content, createdAt FROM Post WHERE userID = {0}'.format(userID))
     column_headers = [x[0] for x in cursor.description]
     json_data = []
     theData = cursor.fetchall()

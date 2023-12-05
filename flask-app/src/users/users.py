@@ -64,6 +64,33 @@ def get_a_user(userID):
 
     return jsonify(json_data)
 
+# GET a specific user based on their userID
+@users.route('/users/reports/<userID>', methods=['GET'])
+def get_a_user_report(userID):
+    # get a cursor object from the database
+    cursor = db.get_db().cursor()
+
+    # use cursor to query the database for a list of users
+    # Cursor executes sql command by dynamically passing userID from request to get_a_user
+    cursor.execute('SELECT reporterID, reportID, content FROM Report WHERE offenderID = {}'.format(userID))
+
+    # grab the column headers from the returned data
+    column_headers = [x[0] for x in cursor.description]
+
+    # create an empty dictionary object to use in 
+    # putting column headers together with data
+    json_data = []
+
+    # fetch all the data from the cursor
+    theData = cursor.fetchall()
+
+    # for each of the rows, zip the data elements together with
+    # the column headers. 
+    for row in theData:
+        json_data.append(dict(zip(column_headers, row)))
+
+    return jsonify(json_data)
+
 # CREATE a user
 @users.route('/users', methods=['POST'])
 def add_new_user():
