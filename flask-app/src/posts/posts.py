@@ -19,7 +19,7 @@ def get_posts():
     cursor = db.get_db().cursor()
 
     # use cursor to query the database for a list of posts
-    cursor.execute('SELECT userName, title, content FROM Post JOIN User LIMIT 50')
+    cursor.execute('SELECT userName, title, content FROM Post JOIN User on Post.userID = User.userID')
 
     # grab the column headers from the returned data
     column_headers = [x[0] for x in cursor.description]
