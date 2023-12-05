@@ -66,7 +66,7 @@ def get_a_user(userID):
 
 # GET a specific user based on their userID
 @users.route('/users/reports/<userID>', methods=['GET'])
-def get_a_user(userID):
+def get_a_user_report(userID):
     # get a cursor object from the database
     cursor = db.get_db().cursor()
 
