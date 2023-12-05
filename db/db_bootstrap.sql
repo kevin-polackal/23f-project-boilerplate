@@ -36,8 +36,10 @@ CREATE TABLE IF NOT EXISTS Message
     receiverID int NOT NULL,
     content MEDIUMTEXT,
     PRIMARY KEY(messageID),
-    FOREIGN KEY (senderID) REFERENCES User(userID),
-    FOREIGN KEY (receiverID) REFERENCES User(userID),
+    FOREIGN KEY (senderID) REFERENCES User(userID)
+    ON UPDATE CASCADE ON DELETE CASCADE,,
+    FOREIGN KEY (receiverID) REFERENCES User(userID)
+    ON UPDATE CASCADE ON DELETE CASCADE,,
     INDEX (senderID, receiverID)
 );
 
@@ -48,8 +50,10 @@ CREATE TABLE IF NOT EXISTS Report
     offenderID int NOT NULL,
     reportID int PRIMARY KEY auto_increment,
     content MEDIUMTEXT,
-    FOREIGN KEY (reporterID) REFERENCES User(userID),
-    FOREIGN KEY (offenderID) REFERENCES User(userID),
+    FOREIGN KEY (reporterID) REFERENCES User(userID)
+    ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY (offenderID) REFERENCES User(userID)
+    ON UPDATE CASCADE ON DELETE CASCADE,,
     INDEX (reporterID, offenderID)
 );
 
