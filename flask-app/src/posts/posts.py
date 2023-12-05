@@ -18,8 +18,7 @@ def get_posts():
     # get a cursor object from the database
     cursor = db.get_db().cursor()
 
-    # use cursor to query the database for a list of posts
-    
+    # use cursor to query the database for a list of posts    
     cursor.execute('''
     SELECT User.userName, User.age, Post.title, Post.content, Post.createdAt 
     FROM Post 
