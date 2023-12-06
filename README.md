@@ -2,10 +2,12 @@ Link to the Phase 3 Explainer Video: https://drive.google.com/file/d/15_vB7aXQBc
 # NuBee: The new Opensource of Northeastern
 Collabaration is what breeds innovation. NuBee is a platform for students to come together and to work on engaging, passion driven projects. From here you can see what every is up to and the things they are working on. Anyone of any skill level, and any background is welcome!
 
-To start the containers simply run : docker compose up -d
+# Run the containers
+`docker compose up -d`
 
 # Overview of Routes
 There are 3 main blueprints that have been implemented, Post, User, and Project.
+
 Post Functionality:
 * Get all Posts in the Database
 * Get the comments on a given post
