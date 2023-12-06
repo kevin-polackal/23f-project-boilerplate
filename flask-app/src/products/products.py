@@ -34,7 +34,7 @@ def get_products():
 @products.route('/product/<id>', methods=['GET'])
 def get_product_detail (id):
 
-    query = 'SELECT id, product_name, description, list_price, category FROM products WHERE id = ' + str(id)
+    query = f'SELECT id, product_name, description, list_price, category FROM products WHERE id = {id}'
     current_app.logger.info(query)
 
     cursor = db.get_db().cursor()
@@ -119,11 +119,7 @@ def add_new_product():
     category = the_data['product_category']
 
     # Constructing the query
-    query = 'insert into products (product_name, description, category, list_price) values ("'
-    query += name + '", "'
-    query += description + '", "'
-    query += category + '", '
-    query += str(price) + ')'
+    query = f'insert into products (product_name, description, category, list_price) values ("{name}", "{description}", "{category}", {price})'
     current_app.logger.info(query)
 
     # executing and committing the insert statement 

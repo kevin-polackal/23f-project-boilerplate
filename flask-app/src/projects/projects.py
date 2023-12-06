@@ -51,7 +51,7 @@ def add_new_project():
     funding = the_data['funding']
 
     # Constructing the project query
-    query = 'INSERT INTO Project (overview, title, funding) VALUES ("'
+    query = f'INSERT INTO Project (overview, title, funding) VALUES ("{description}", "{title}", {funding})'
     query += description + '", "'
     query += title + '", '
     query += str(funding) + ')'
@@ -80,10 +80,7 @@ def join_project():
     role = the_data['role']
 
     # Constructing the query
-    query = 'INSERT INTO Role (projectID, userID, role) VALUES ("'
-    query += str(projectID) + '", "'
-    query += str(userID) + '", "'
-    query += role + '")'
+    query = f'INSERT INTO Role (projectID, userID, role) VALUES ("{projectID}", "{userID}", "{role}")'
     current_app.logger.info(query)
 
 
@@ -108,9 +105,12 @@ def update_proj(projectID):
     description = the_data['overview']
     title = the_data['title']
     funding = the_data['funding']
+    
+    description = description.replace("'", "''")
+    title = title.replace("'", "''")
 
     # Constructing the query
-    query = "UPDATE Project SET overview = '{}', title = '{}', funding = {} WHERE projectID = {}".format(description.replace("'", "''"), title.replace("'", "''"), funding, projectID)
+    query = f"UPDATE Project SET overview = '{description}', title = '{title}', funding = {funding} WHERE projectID = {projectID}"
     # Verify query before sending to DB
     current_app.logger.info(query)
 
@@ -129,7 +129,7 @@ def delete_proj(projectID):
     
     # executing and committing the deletion statement 
     cursor = db.get_db().cursor()
-    cursor.execute('DELETE FROM Project WHERE projectID = {0}'.format(projectID))
+    cursor.execute(f'DELETE FROM Project WHERE projectID = {projectID}')
     db.get_db().commit()
     
     return 'Success!'
@@ -141,7 +141,7 @@ def get_milestones(projectID):
     cursor = db.get_db().cursor()
 
     # use cursor to query the database for a list of projects
-    cursor.execute('SELECT projectID, dueDate, completed FROM Milestone WHERE Milestone.projectID = {0}'.format(projectID))
+    cursor.execute(f'SELECT projectID, dueDate, completed FROM Milestone WHERE Milestone.projectID = {projectID}')
 
     # grab the column headers from the returned data
     column_headers = [x[0] for x in cursor.description]
@@ -165,7 +165,7 @@ def get_milestones(projectID):
 def get_project(projectID):
     cursor = db.get_db().cursor()
     # Prone to SQL injection, but okay for purposes of MVP
-    cursor.execute('SELECT title, overview, funding FROM Project WHERE projectID = {0}'.format(projectID))
+    cursor.execute(f'SELECT title, overview, funding FROM Project WHERE projectID = {projectID}')
     column_headers = [x[0] for x in cursor.description]
     json_data = []
     theData = cursor.fetchall()

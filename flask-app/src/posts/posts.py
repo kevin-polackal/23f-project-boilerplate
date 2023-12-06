@@ -55,12 +55,12 @@ def new_post(userID):
     #extracting the variable
     title = the_data['title']
     content = the_data['content']
+    
+    title = title.replace('"', '\\"')
+    content = content.replace('"', '\\"')
 
     # Constructing the query
-    query = 'INSERT INTO Post (userID, title, content) VALUES ("'
-    query += str(userID) + '", "'
-    query += title.replace('"', '\\"') + '", "'
-    query += content.replace('"', '\\"') + '")'
+    query = f'INSERT INTO Post (userID, title, content) VALUES ("{userID}", "{title}", "{content}")'
     current_app.logger.info(query)
 
 
@@ -84,8 +84,11 @@ def update_user_post(userID, postID):
     content = the_data['content']
     title = the_data['title']
 
+    content = content.replace("'", "''")
+    title = title.replace("'", "''")
+
     # Constructing the query
-    query = "UPDATE Post SET content = '{}', title = '{}' WHERE userID = {} AND postID = {}".format(content.replace("'", "''"), title.replace("'", "''"), userID, postID)
+    query = f"UPDATE Post SET content = '{content}', title = '{title}' WHERE userID = {userID} AND postID = {postID}"
     current_app.logger.info(query)
 
 
@@ -102,7 +105,7 @@ def delete_post(postID, userID):
     
     # executing and committing the deletion statement 
     cursor = db.get_db().cursor()
-    cursor.execute('DELETE FROM Post WHERE postID = {} AND userID = {}'.format(postID, userID))
+    cursor.execute(f'DELETE FROM Post WHERE postID = {postID} AND userID = {userID}')
     db.get_db().commit()
     
     return 'Success!'
@@ -113,7 +116,7 @@ def delete_all_user_posts(userID):
     
     # executing and committing the deletion statement 
     cursor = db.get_db().cursor()
-    cursor.execute('DELETE FROM Post WHERE userID = {}'.format(userID))
+    cursor.execute(f'DELETE FROM Post WHERE userID = {userID}')
     db.get_db().commit()
     
     return 'Success!'
@@ -125,7 +128,7 @@ def get_post_comments(postID):
     cursor = db.get_db().cursor()
 
     # use cursor to query the database for a list of posts
-    cursor.execute('SELECT username, content FROM Comment JOIN User on Comment.userID = User.userID WHERE Comment.postID = {}'.format(postID))
+    cursor.execute(f'SELECT username, content FROM Comment JOIN User on Comment.userID = User.userID WHERE Comment.postID = {postID}')
 
     # grab the column headers from the returned data
     column_headers = [x[0] for x in cursor.description]
@@ -148,7 +151,7 @@ def get_post_comments(postID):
 @posts.route('/posts/<userID>', methods=['GET'])
 def get_all_user_posts(userID):
     cursor = db.get_db().cursor()
-    cursor.execute('SELECT postID, title, content, createdAt FROM Post WHERE userID = {0}'.format(userID))
+    cursor.execute(f'SELECT postID, title, content, createdAt FROM Post WHERE userID = {userID}')
     column_headers = [x[0] for x in cursor.description]
     json_data = []
     theData = cursor.fetchall()
