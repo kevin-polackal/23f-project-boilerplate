@@ -1,3 +1,6 @@
+# NuBee: The new Opensource of Northeastern
+Collabaration is what breeds innovation. NuBee is a platform for students to come together and to work on engaging, passion driven projects. From here you can see what every is up to and the things they are working on. Anyone of any skill level, and any background is welcome!
+
 # MySQL + Flask Boilerplate Project
 
 This repo contains a boilerplate setup for spinning up 3 Docker containers: 
