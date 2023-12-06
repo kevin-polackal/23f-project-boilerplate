@@ -4,6 +4,37 @@ Collabaration is what breeds innovation. NuBee is a platform for students to com
 
 To start the containers simply run : docker compose up -d
 
+# Overview of Routes
+There are 3 main blueprints that have been implemented, Post, User, and Project.
+Post Functionality:
+* Get all Posts in the Database
+* Get the comments on a given post
+* Get all the Posts from a given user
+* Create a Post for some user
+* Update a specific post from a given user
+* Delete a specific post from a given user
+* Delete all posts from a given user
+
+User Functionality:
+* Get all users
+* Get a certain user
+* Get the reports of a certain user
+* Get a given user's roles
+* Create a new user
+* Update a given user
+* Delete a given user
+
+Project Functionality:
+* Get all projects
+* Get a given project
+* Get the milestones of a given project
+* Create a project
+* Join a project through a role
+* Update a given project
+* Delete a given project
+  
+
+  
 # MySQL + Flask Boilerplate Project
 
 This repo contains a boilerplate setup for spinning up 3 Docker containers: 
