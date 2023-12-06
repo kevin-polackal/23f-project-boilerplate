@@ -45,7 +45,7 @@ def get_a_user(userID):
 
     # use cursor to query the database for a list of users
     # Cursor executes sql command by dynamically passing userID from request to get_a_user
-    cursor.execute('SELECT userID, userName, isAdmin, age FROM User WHERE userID = {}'.format(userID))
+    cursor.execute(f'SELECT userID, userName, isAdmin, age FROM User WHERE userID = {userID}')
 
     # grab the column headers from the returned data
     column_headers = [x[0] for x in cursor.description]
@@ -72,7 +72,7 @@ def get_a_user_report(userID):
 
     # use cursor to query the database for a list of users
     # Cursor executes sql command by dynamically passing userID from request to get_a_user
-    cursor.execute('SELECT reporterID, reportID, content FROM Report WHERE offenderID = {}'.format(userID))
+    cursor.execute(f'SELECT reporterID, reportID, content FROM Report WHERE offenderID = {userID}')
 
     # grab the column headers from the returned data
     column_headers = [x[0] for x in cursor.description]
@@ -105,10 +105,7 @@ def add_new_user():
     age = the_data['age']
 
     # Constructing the query
-    query = 'INSERT INTO User (userName, isAdmin, age) VALUES ("'
-    query += username + '", "'
-    query += str(admin) + '", '
-    query += str(age) + ')'
+    query = f'INSERT INTO User (userName, isAdmin, age) VALUES ("{username}", "{admin}", {age})'
     current_app.logger.info(query)
 
 
@@ -132,11 +129,13 @@ def update_user(userID):
     admin = the_data['isAdmin']
     age = the_data['age']
 
+    username = username.replace("'", "''")
+
     # Constructing the query
     # username.replace("'", "''") is used to escape any single quotes within the username variable by 
     # replacing them with double single quotes. This is done to prevent SQL injection
     #  by ensuring that any single quotes in the username are treated as data, not as part of the SQL query.
-    query = "UPDATE User SET userName = '{}', isAdmin = '{}', age = {} WHERE userID = {}".format(username.replace("'", "''"), admin, age, userID)
+    query = f"UPDATE User SET userName = '{username}', isAdmin = '{admin}', age = {age} WHERE userID = {userID}"
     current_app.logger.info(query)
 
 
@@ -153,7 +152,7 @@ def delete_user(userID):
     
     # executing and committing the deletion statement 
     cursor = db.get_db().cursor()
-    cursor.execute('DELETE FROM User WHERE userID = {0}'.format(userID))
+    cursor.execute(f'DELETE FROM User WHERE userID = {userID}')
     db.get_db().commit()
     
     return 'Success!'
@@ -165,7 +164,7 @@ def get_user_roles(userID):
     cursor = db.get_db().cursor()
 
     # use cursor to query the database for a list of products
-    cursor.execute('SELECT projectID, role FROM Role WHERE userID = {0}'.format(userID))
+    cursor.execute(f'SELECT projectID, role FROM Role WHERE userID = {userID}')
 
     # grab the column headers from the returned data
     column_headers = [x[0] for x in cursor.description]
